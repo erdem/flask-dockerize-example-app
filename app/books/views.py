@@ -45,7 +45,12 @@ def create_request():
         errors = err.messages
         return jsonify({'errors': errors}), HTTPStatus.BAD_REQUEST
 
-    return jsonify(validated_data), HTTPStatus.CREATED
+    request_email = RequestEmail(email=validated_data.get('email'))
+    book.request_emails.append(request_email)
+    db.session.add(book)
+    db.session.add(request_email)
+    db.session.commit()
+    return RequestEmailRetrieveSchema().dump(request_email), HTTPStatus.CREATED
 
 
 @books_api.route('request/<int:request_id>/', methods=["DELETE"])

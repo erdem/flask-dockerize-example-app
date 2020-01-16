@@ -1,8 +1,4 @@
-from marshmallow import Schema, fields, post_load
-from sqlalchemy import func
-
-from app.books.models import Book, RequestEmail
-from app.database import db
+from marshmallow import Schema, fields
 
 
 class RequestEmailRetrieveSchema(Schema):
@@ -18,15 +14,3 @@ class RequestEmailRetrieveSchema(Schema):
 class RequestEmailCreateSchema(Schema):
     title = fields.Str(load_only=True)
     email = fields.Email(load_only=True)
-
-    @post_load
-    def create_request_email(self, data, **kwargs):
-        book_title = data.get('title')
-        email = data.get('email')
-        book = Book.query.filter(func.lower(Book.title) == book_title.lower()).one()
-        request_email = RequestEmail(email=email)
-        book.request_emails.append(request_email)
-        db.session.add(book)
-        db.session.add(request_email)
-        db.session.commit()
-        return RequestEmailRetrieveSchema().dump(request_email)
