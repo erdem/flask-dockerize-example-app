@@ -1,0 +1,6 @@
+FROM python:3.6
+ADD . /code
+WORKDIR /code
+ENV FLASK_RUN_HOST 0.0.0.0
+RUN pip install -r requirements.txt
+CMD ["flask", "run"]
