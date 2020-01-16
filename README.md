@@ -22,7 +22,7 @@ curl -X POST \
   "title": "witcher",
   "email": "test2@test.com"
 }'
-
+```
 ##### Retrieve a request entity by ID
 
 ```bash
