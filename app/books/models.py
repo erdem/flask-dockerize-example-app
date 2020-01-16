@@ -42,6 +42,10 @@ class RequestEmail(db.Model):
         "order_by": created_at
     }
 
+    __table_args__ = (
+        db.UniqueConstraint('book_id', 'email', name='unique_component_commit'),
+    )
+
     __tablename__ = 'request_email'
 
     def __repr__(self):

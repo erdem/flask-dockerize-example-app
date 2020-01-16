@@ -26,9 +26,17 @@ def create_request():
     schema = RequestEmailCreateSchema()
 
     book_title = data.get('title', '')
-    if not bool(Book.query.filter(func.lower(Book.title) == book_title.lower()).first()):
+    email = data.get('email')
+    book = Book.query.filter(func.lower(Book.title) == book_title.lower()).first()
+    if not bool(book):
         return {'errors': {
-            'title': [f'"{book_title}" could not foound']
+                        'title': [f'"{book_title}" could not foound']
+                    }
+               }, HTTPStatus.BAD_REQUEST
+
+    if bool(RequestEmail.query.filter_by(book_id=book.id, email=email).first()):
+        return {'errors': {
+            'email': [f'"{book_title}" already requested for "{email}"']
         }}, HTTPStatus.BAD_REQUEST
 
     try:
